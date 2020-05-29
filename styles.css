@@ -1,0 +1,323 @@
+:root {
+    --danger: #f50a0a;
+    --danger-bg: #fcaeae;
+    --secondary: #ccc;
+    --secondary-bg: #333;
+    --success: #00c642;
+    --success-bg: #dbffdb;
+    --info: #75caeb;
+    --info-bg: #287d9e;
+    --yellow: #f0d264;
+    --yellow-bg: #9e9644;
+    --orange: #ff9540;
+    --orange-bg: #ab4f1a;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    overflow: hidden;
+}
+div.container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 100px 197px;
+    grid-gap: 3px;
+    background: #777;
+    color: #fff;
+}
+div#chart {
+    grid-row: 1/3;
+    background: #333;
+    text-align: center;
+}
+div.info {
+    padding: 10px 0px 5px 0px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: baseline;
+    align-content: space-between;
+    background: #333;
+}
+div.options {
+    padding: 10px 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    background: #333;
+}
+div.options .info-panel {
+    display: flex;
+    flex-direction: row;
+    overflow: visible;
+}
+div.options .btns {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    align-self: flex-end;
+    margin-left: auto;
+    max-height: 160px;
+    overflow: auto;
+}
+div.options .tabs button {
+    margin: 5px 5px;
+    padding: 1px 10px;
+    flex: 0 0 auto;
+    background: var(--secondary-bg);
+    border: 1px solid #777;
+    border-radius: 20px;
+    height: 30px;
+    overflow: hidden;
+    cursor: pointer;
+}
+div.options .tabs button:hover {
+    border-color: #111;
+}
+div.options .tabs .badge {
+    margin: 4px;
+    padding: 1px;
+    display: inline-block;
+    background: var(--secondary-bg);
+    border: 1px inset var(--secondary-bg);
+    min-width: 20px;
+    color: var(--secondary);
+    font-size: 11px;
+}
+div.options .tabs .circle {
+    position: relative;
+    top: 4px;
+    left: -7px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+div.content {
+    display: grid;
+    grid-template-columns: repeat(3, 25px);
+    grid-template-rows: repeat(3, 25px);
+    grid-gap: 1px;
+    position: relative;
+    right: 0px;
+}
+.content .content-item {
+    color: var(--secondary);
+    font-size: 12px;
+    text-align: center;
+    line-height: 25px;
+    opacity: .3;
+    cursor: pointer;
+}
+.content .content-item:nth-child(5) {
+    color: var(--success);
+}
+.content .content-item:hover {
+    opacity: 1;
+}
+.alert {
+    display: block;
+    padding-top: 5px;
+    width: 75%;
+    height: 45px;
+    border-radius: 7px;
+    text-align: center;
+    font-style: italic;
+    overflow: auto;
+}
+.alert-success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+.alert-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+.alert-secondary {
+    background: var(--secondary-bg);
+    color: var(--secondary);
+    border: 1px solid var(--secondary);
+}
+.btn-gradient {
+    margin: 5px;
+    padding: 4px 12px;
+    border: 1px solid rgba(0,0,0,.21);
+    border-bottom: 4px solid rgba(0,0,0,.21);
+    border-radius: 4px;
+    color: #333;
+    text-shadow: 0 1px 0 rgba(0,0,0,.15);
+    cursor: pointer;
+}
+.btn-gradient:focus {
+    outline: none;
+}
+.mini {
+    width: 100px;
+    font-size: 12px;
+}
+.green {
+    background: transparent;
+    border: 2px solid #333;
+    color: var(--success);
+}
+.green:hover,
+.green:active {
+    background: #036b26;
+    color: #fff;
+    outline: none;
+}
+.blue {
+    background: transparent;
+    border: 2px solid var(--info);
+    color: var(--info);
+}
+.blue:hover,
+.blue:active {
+    background: #287d9e;
+    color: #fff;
+    outline: none;
+}
+.yellow {
+    background: transparent;
+    border: 2px solid var(--yellow);
+    color: var(--yellow);
+}
+.yellow:hover,
+.yellow:active {
+    background: var(--yellow-bg);
+    color: #fff;
+    outline: none;
+}
+.gray {
+    background: transparent;
+    border: 2px solid #ddd;
+    color: #ddd;
+}
+.gray:hover,
+.gray:active {
+    background: #999;
+    color: #fff;
+    outline: none;
+}
+.orange {
+    background: transparent;
+    border: 2px solid #ff9540;
+    color: #ff9540;
+}
+.orange:hover,
+.orange:active {
+    background: var(--orange-bg);
+    color: #fff;
+    outline: none;
+}
+.fa {
+    margin: auto 5px;
+    cursor: pointer;
+}
+.target-fail {
+    color: var(--danger)!important;
+}
+.target-done {
+    color: var(--success)!important;
+}
+/* Sidepanel */
+.side-panel {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 0px;
+    height: 100%;
+    background: #111;
+    opacity: .95;
+    transition: .5s;
+    overflow-x: hidden;
+}
+.side-panel .btn-close {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+.side-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+}
+.side-panel table tr {
+}
+.side-panel table td {
+    color: #333;
+}
+.side-panel table .header {
+    display: flex;
+    justify-content: space-between;
+}
+.side-panel table th:last-child {
+    width: 35px;
+}
+.target-info {
+    margin: 75px 30px auto 30px;
+    display: none;
+}
+.target-info .target-item {
+    margin: 7px 0px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+.target-item button {
+    position: relative;
+    left: -5px;
+}
+.target-item-group {
+    display: flex;
+    flex-direction: column;
+}
+.target-item-group > label {
+    color: #999;
+    font-size: 10px;
+}
+.collapse {
+    display: none;
+    overflow: hidden;
+}
+.collapse.show {
+    display: table-row-group;
+    animation: fade-out .5s;
+}
+.append-activity {
+    color: var(--success);
+}
+.remove-activity {
+    color: var(--danger);
+}
+select {
+    border: 0px;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    font-size: 13px;
+}
+input {
+    width: 80px;
+    margin: 0px 2px;
+    padding: 2px 0px 2px 5px;
+    flex: 1 0 auto;
+    border: 1px;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    font-size: 12px;
+    font-style: italic;
+}
+input[type="number"]{
+    width: 50px;
+}
+/* End Sidepanel */

@@ -1,0 +1,14 @@
+{
+  "name": "pomodoroeagle",
+  "version": "1.0.0",
+  "description": "Performance measurement of made pomodoros",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "CodArt",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^8.2.5"
+  }
+}

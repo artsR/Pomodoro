@@ -1,0 +1,7 @@
+# Electron
+node_modules
+
+# Python
+*.env
+*.csv
+*.pickle
