@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Tray, Menu, screen} = require('electron')
+const {app, BrowserWindow, Tray, Menu, ipcMain, screen} = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -24,6 +24,10 @@ app.on('activate', () => {
     }
 })
 app.allowRendererProcessReuse = false
+
+ipcMain.on('show-message', () => {
+    mainWindow.webContents.send('show-message');console.log('ipcmain')
+})
 
 
 function createTray() {
@@ -60,7 +64,7 @@ function createWindow() {
             nodeIntegration: true
         }
     })
-    mainWindow.loadURL(//'http://127.0.0.1:3000/main.html'
+    mainWindow.loadURL(
         url.format({
             pathname: path.join(__dirname, 'main.html'),
             protocol: 'file:',
@@ -88,4 +92,28 @@ function showWindow() {
     mainWindow.show()
     mainWindow.focus()
 }
-// ipcMain.on('show-window', () => showWindow())
+
+function createSettingsWindow() {
+    let settingsWindow = new BrowserWindow({
+        width: 400,
+        height: 200,
+        frame: false,
+        resizable: false,
+        alwaysOnTop: true,
+        parent: mainWindow,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    settingsWindow.loadURL(
+        url.format({
+            pathname: path.join(__dirname, 'settings.html'),
+            protocol: 'file',
+            slashes: true,
+        })
+    )
+    settingsWindow.on('close', () => {
+        settingsWindow = null
+    })
+    settingsWindow.show()
+}

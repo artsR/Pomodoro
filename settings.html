@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="./styles.css"/>
+    <link rel="stylesheet" href="./styles_settings.css">
+  </head>
+  <body>
+    <div class="container-settings">
+      <header>
+        <div class="window-action" id="close">&#x2716;</div>
+        <span class="window-header">Settings</span>
+      </header>
+      <div class="main">
+        <form action="" method="POST">
+          <label for="file-password">Protect file:</label>
+          <input type="password" id="file-password" disabled/>
+          <button class="btn-gradient mini yellow" hidden>Encrypt</button>
+        </form>
+        <form action="" id="form-time">
+          <label for="day-start">New day starts at:</label>
+          <input type="time" value="06:00" id="day-start"
+            title="New day's start will be moved forward to the provided time"/>
+          <button type="submit" class="btn-gradient mini yellow" id="save-time">Save</button>
+        </form>
+        <button class="btn-gradient mini gray" id="cancel">Cancel</button>
+      </div>
+    </div>
+    <script src="./settings.js"></script>
+  </body>
+</html>

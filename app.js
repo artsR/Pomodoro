@@ -1,3 +1,5 @@
+const {ipcRenderer} = require('electron')
+
 const messageDiv = document.querySelector('.info').children[2]
 var chartOptions = {
     series: [],
@@ -64,6 +66,10 @@ function setDate() {
     messageDiv.className = 'alert alert-secondary'
 }
 setDate()
+
+ipcRenderer.on('show-message', function() {
+    TargetUI.showMessage('Data saved', 'success');console.log('mainPage')
+})
 
 // Main Buttons
 const newTarget = document.getElementById('new-target')
