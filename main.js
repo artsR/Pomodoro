@@ -37,7 +37,13 @@ function createTray() {
             click() {
                 app.quit()
             }
-        }
+        },
+        {
+            label: 'Settings',
+            click() {
+                createSettingsWindow()
+            }
+        },
     ])
     tray.setContextMenu(contextMenu)
 }
@@ -56,9 +62,9 @@ function createWindow() {
     })
     mainWindow.loadURL(//'http://127.0.0.1:3000/main.html'
         url.format({
-        pathname: path.join(__dirname, 'main.html'),
-        protocol: 'file:',
-        slashes: true,
+            pathname: path.join(__dirname, 'main.html'),
+            protocol: 'file:',
+            slashes: true,
         })
     )
     mainWindow.on('closed', () => {

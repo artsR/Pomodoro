@@ -13,6 +13,9 @@ var chartOptions = {
             track: {
                 background: '#111',
             },
+            hollow: {
+                size: "35%"
+            },
             dataLabels: {
                 name: {
                     fontSize: '16px',
@@ -23,8 +26,8 @@ var chartOptions = {
                     offsetY: 75,
                     fontSize: '22px',
                     color: '#ccc',
-                    formatter: (val) => `${val}%`,
-                }
+                    formatter: val => `${val}%`,
+                },
             }
         }
     },
@@ -88,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             TargetUI.showMessage(message.text, message.type)
         }
     })
+    .catch(err => console.log(err))
 })
 
 newTarget.addEventListener('click', () => sidepanel.showNewTarget())
@@ -147,6 +151,7 @@ saveNewTarget.addEventListener('click', (e) => {
             TargetUI.showMessage(message.text, message.type)
             TargetUI.displayAllTargets(data.targets, chartOptions)
         })
+        .catch(err => console.log(err))
     }
     sidepanel.hide()
 })
@@ -168,6 +173,22 @@ applyTodosChanges.addEventListener('click', () => {
         message = JSON.parse(data.message)
         TargetUI.showMessage(message.text, 'success')
     })
+    .catch(err => console.log(err))
+})
+
+// ** Controls buttons Events (per day, free days)
+document.querySelector('#freedays-plus').addEventListener('click', () => {
+    const targetToMod = document.querySelector('.info-panel button.active')
+    const targetName = targetToMod.dataset.title
+})
+document.querySelector('#freedays-minus').addEventListener('click', () => {
+
+})
+document.querySelector('#perday-plus').addEventListener('click', () => {
+
+})
+document.querySelector('#perday-minus').addEventListener('click', () => {
+
 })
 
 

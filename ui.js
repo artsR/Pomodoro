@@ -110,7 +110,7 @@ class SidepanelUI {
     }
 
     show() {
-        document.getElementById('sidepanel').style.width = '300px'
+        document.getElementById('sidepanel').style.width = '301px'
     }
 
     hide() {
@@ -194,6 +194,7 @@ class TargetUI {
 
         tabBtn.type = 'button'
         tabBtn.dataset.title = target.target_title
+        tabBtn.title = target.target_title
         tabCircle.className = 'circle'
         tabCircle.style.background = color
         tabHrs.className = 'badge'
@@ -209,12 +210,26 @@ class TargetUI {
         if (target.progress/target.target_hrs >= 1) {
             tabDays.classList.add('target-done')
         }
+
+        tabBtn.addEventListener('click', () => this.showControls(tabBtn))
     }
 
     addTargetToChart(target, options) {
         /**Add Target's data to chart's `options`. It doesn't render Chart.*/
         options.series.push(Math.round(target.progress / target.target_hrs * 100))
         options.labels.push(target.target_title)
+    }
+
+    showControls(activeBtn) {
+        const panelBtns = document.querySelectorAll('.info-panel .tabs button')
+        const controlsNav = document.querySelector('.info-panel .content')
+
+        panelBtns.forEach(btn => {
+            btn.classList.remove('active')
+        })
+        activeBtn.classList.add('active')
+        controlsNav.style.transform = 'scale(1)'
+        controlsNav.style.opacity = '1'
     }
 
     static getAllTargets(targetsObj) {
@@ -330,262 +345,3 @@ class ActivityUI {
         return todos
     }
 }
-
-// const messageDiv = document.querySelector('.info').children[2]
-// var chartOptions = {
-//     series: [],
-//     chart: {
-//         height: 320,
-//         type: 'radialBar',
-//         offsetY: -10
-//     },
-//     plotOptions: {
-//         radialBar: {
-//             startAngle: -135,
-//             endAngle: 135,
-//             track: {
-//                 background: '#111',
-//             },
-//             dataLabels: {
-//                 name: {
-//                     fontSize: '16px',
-//                     color: undefined,
-//                     offsetY: 115,
-//                 },
-//                 value: {
-//                     offsetY: 75,
-//                     fontSize: '22px',
-//                     color: '#ccc',
-//                     formatter: (val) => `${val}%`,
-//                 }
-//             }
-//         }
-//     },
-//     fill: {
-//         type: 'gradient',
-//         gradient: {
-//             shade: 'dark',
-//             shadeIntensity: 0.15,
-//             inverseColors: false,
-//             opacityFrom: 1,
-//             opacityTo: 1,
-//             stops: [0, 50, 65, 91]
-//         },
-//     },
-//     stroke: {
-//         dashArray: 3
-//     },
-//     labels: [],
-// }
-//
-// document.addEventListener('DOMContentLoaded', () => {
-//     TargetUI.showLoading()
-//     TargetUI.resetTargets()
-//     fetch(`http://127.0.0.1:5050/targets`, {
-//         method: 'GET',
-//         mode: 'no-cors'
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         TargetUI.displayAllTargets(data.targets, chartOptions)
-//         if (data.message) {
-//             message = JSON.parse(data.message)
-//             TargetUI.showMessage(message.text, message.type)
-//         }
-//     })
-// })
-//
-// // Datetime setting
-// const today = new Date()
-// const daysInMonth = getDaysInMonth(today.getMonth(), today.getFullYear())
-//
-// function getDaysInMonth(month, year) {
-//     return new Date(year, month, 0).getDate()
-// }
-// function setDate() {
-//     const months = [
-//         "January", "February", "March", "April", "May", "June",
-//         "July", "August", "September", "October", "November", "December"
-//     ]
-//     messageDiv.innerText = `${months[today.getMonth()]} ${today.getFullYear()}`
-//     messageDiv.className = 'alert alert-secondary'
-// }
-// setDate()
-//
-// // Sidepanel
-// const newTarget = document.getElementById('new-target')
-// const allTarget = document.getElementById('all-targets')
-// const closeSidepanel = document.getElementById('close-sidepanel')
-// const refresh = document.getElementById('refresh')
-// const update = document.getElementById('update')
-//
-// newTarget.addEventListener('click', showNewTarget)
-// allTarget.addEventListener('click', showAllTarget)
-// closeSidepanel.addEventListener('click', hideSidepanel)
-// refresh.addEventListener('click', () => {
-//     // TargetUI.showLoading()
-//     // location.reload()
-//     fetch(`http://127.0.0.1:5050/refresh`)
-//     .then(response => response.json())
-//     .then(data => {
-//         TargetUI.resetTargets()
-//         TargetUI.displayAllTargets(data.data, chartOptions)
-//         console.log(data)})
-//     .catch(err => console.log(err))
-// })
-// update.addEventListener('click', () => {
-//     fetch(`http://127.0.0.1:5050/update_data`, {
-//         method: 'POST'
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         message = JSON.parse(data.message)
-//         TargetUI.showMessage(message.text, message.type)
-//     })
-// })
-//
-// function runPython() {
-//     var python = require('child_process').spawn('python', ['./pomodoro/pomodoro.py'])
-//     TargetUI.showLoading()
-//     python.stdout.on('data', data => {
-//         TargetUI.showMessage(data.toString('utf8'), 'secondary')
-//         document.querySelector('#chart').innerHTML = ''
-//         // var chart = new ApexCharts(document.querySelector("#chart"), chartOptions)
-//         chart.render()
-//     })
-// }
-//
-// function showSidepanel() {
-//     document.getElementById('sidepanel').style.width = '300px'
-// }
-// function hideSidepanel() {
-//     document.getElementById('sidepanel').style.width = '0px'
-// }
-//
-// function showNewTarget() {
-//     allTargetInfo.style.display = 'none'
-//     newTargetInfo.style.display = 'block'
-//     showSidepanel()
-// }
-// function showAllTarget() {
-//     newTargetInfo.style.display = 'none'
-//     let testTarget = new Target('test', 150, 9, null,
-//                                 ['@example1','+example1','+example2'], 110)
-//     new TargetUI().addTargetToList(testTarget)
-//     allTargetInfo.style.display = 'block'
-//     showSidepanel()
-// }
-//
-// // List all Target:
-// const allTargetInfo = document.querySelector('.all-target')
-// const applyTodosChanges = document.getElementById('apply-changes')
-//
-// applyTodosChanges.addEventListener('click', () => {
-//     //follow made changes
-//     const targetTables = allTargetInfo.querySelectorAll('table')
-//     const targetObjs = {}
-//     targetTables.forEach(targetTable => {
-//         const title = targetTable.querySelector('th :nth-child(2)').innerText
-//         const activities = targetTable.querySelectorAll('tbody tr')
-//         let todos = []
-//
-//         activities.forEach(todo => {
-//             todo.querySelector('td').innerText
-//             todos.push(todo.querySelector('td').innerText)
-//         })
-//         if (todos.length > 0){
-//             targetObjs[title] = todos
-//         }
-//     })
-//     hideSidepanel()
-//     fetch(`http://127.0.0.1:5050/edit_targets`, {
-//         method: 'POST',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(targetObjs)
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         TargetUI.resetTargets()
-//         TargetUI.displayAllTargets(data.targets, chartOptions)
-//         message = JSON.parse(data.message)
-//         TargetUI.showMessage(message.text, 'success')
-//     })
-// }) // now fetch 'todos': targetObjs
-//
-// // Create new Target:
-// const newTargetInfo = document.querySelector('.new-target')
-//
-// const table = document.querySelector('table')
-// const titleInput = document.querySelector('#target-title')
-// const targethrsInput = document.querySelector('#target-hrs')
-// const perdayInput = document.querySelector('#per-day')
-// const freedaysInput = document.querySelector('#free-days')
-// var todos = []
-//
-// newTargetInfo.addEventListener('click', decideAction)
-// perdayInput.addEventListener('change', (e) => {
-//     if (targethrsInput.value !== '') {
-//         freedaysInput.value = daysInMonth - (targethrsInput.value/perdayInput.value)
-//     }
-// })
-// freedaysInput.addEventListener('change', (e) => {
-//     if (targethrsInput.value !== '') {
-//         perdayInput.value = targethrsInput.value / (daysInMonth-freedaysInput.value)
-//     }
-// })
-//
-// // Action on 'click' event - new Target sidepanel
-// function decideAction(e) {
-//     e.preventDefault()
-//     if (e.target.parentElement.classList.contains('add-activity')) {
-//         // Add new `activity` to `new target`:
-//         const parent = e.target.closest('div'),
-//             activityType = parent.children[0],
-//             activityName = parent.children[1]
-//         if (activityName.value !== '') {
-//             new ActivityUI(table, `${activityType.value}${activityName.value}`)
-//             activityName.value = ''
-//         }
-//     }
-//     else if (e.target.type === 'submit') {
-//         // Prepare all activities (`todos`) and apply `new target`:
-//         let rows = table.querySelectorAll('tr')
-//         todos = []
-//         rows.forEach((row, i) => {
-//             todos.push(row.firstElementChild.innerText)
-//         })
-//         if (todos.length === 0) {
-//             TargetUI.showMessage('Missed required data!', 'danger')
-//             hideSidepanel()
-//         }
-//         else {
-//             TargetUI.showLoading()
-//             TargetUI.resetTargets()
-//             let newTarget = new Target(titleInput.value, targethrsInput.value,
-//                                     freedaysInput.value, null, todos, null)
-//             fetch(`http://127.0.0.1:5050/new_target`, {
-//                 method: 'POST',
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify(newTarget)
-//             })
-//             .then(response => response.json())
-//             .then(data => {
-//                 message = JSON.parse(data.message)
-//                 TargetUI.showMessage(message.text, message.type)
-//                 TargetUI.displayAllTargets(data.targets, chartOptions)
-//             })
-//             hideSidepanel()
-//         }
-//     }
-// }
-
-// Actual performance chart:
-
-// var chart = new ApexCharts(document.querySelector("#chart"), chartOptions)
-// chart.render()
