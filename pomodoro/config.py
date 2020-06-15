@@ -17,6 +17,7 @@ class Config:
     PICKLE_LOCAL_PATH = os.path.join(basedir, 'test.pickle')
     LOGS_LOCAL_PATH = os.path.join(basedir, '../logs.csv')
     LOGS_MONTH_PATH = os.path.join(basedir, '../logs_this_month.csv')
+    SETTING_JSON_PATH = os.path.join(basedir, '../settings.json')
 
     # Pomodoro:
     RE_PROJECT = r'\+.*?[^\s]*'

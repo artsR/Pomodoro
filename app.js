@@ -68,7 +68,7 @@ function setDate() {
 setDate()
 
 ipcRenderer.on('show-message', function() {
-    TargetUI.showMessage('Data saved', 'success');console.log('mainPage')
+    TargetUI.showMessage('Data saved', 'success')
 })
 
 // Main Buttons

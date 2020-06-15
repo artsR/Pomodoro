@@ -26,7 +26,7 @@ app.on('activate', () => {
 app.allowRendererProcessReuse = false
 
 ipcMain.on('show-message', () => {
-    mainWindow.webContents.send('show-message');console.log('ipcmain')
+    mainWindow.webContents.send('show-message')
 })
 
 

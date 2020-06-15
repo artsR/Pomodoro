@@ -35,5 +35,5 @@ function closeSettings() {
 }
 
 function showMessage() {
-    ipcRenderer.send('show-message');console.log('settings')
+    ipcRenderer.send('show-message')
 }

@@ -7,6 +7,7 @@ import dropbox
 import calendar
 import requests
 import pickle
+import json
 from datetime import datetime
 from calendar import monthrange
 from config import Config
@@ -106,8 +107,10 @@ class PomodoroTarget:
             })
 
         df_pomodoros = pd.read_csv(_logs_file)
+        df_pomodoros['custom_date'] = pd.to_datetime(df_pomodoros['custom_date'])
         df_this_month = df_pomodoros[
-            (df_pomodoros.year == self.__year) & (df_pomodoros.month == self.__month)
+            (df_pomodoros.custom_date.dt.year == self.__year) &
+            (df_pomodoros.custom_date.dt.month == self.__month)
         ]
         df_this_month = df_this_month[
             df_this_month['description'].str.contains(self.__regex)
@@ -175,6 +178,14 @@ class PomodoroTarget:
         return secs / 3600
 
 
+    @staticmethod
+    def get_settings(key=None):
+        """Get setting for given `key` from json file. By default returns all."""
+        with open(Config.SETTING_JSON_PATH, 'rb') as f_json:
+            cfg = json.load(f_json)
+        return  cfg if key is None else cfg.get(key, None)
+
+
     @classmethod
     def update_data(cls):
         """Downloads Pomodoro's logs from Dropbox and adapts dataset."""
@@ -202,11 +213,22 @@ class PomodoroTarget:
         # Load data, Adjust header, Add full date and Convert duration format:
         header = ['year','month','day','time','duration','start','end','description']
         df_pomodoros = pd.read_csv(
-            Config.LOGS_LOCAL_PATH, names=header, skiprows=1, na_filter=False
+            Config.LOGS_LOCAL_PATH, names=header, skiprows=1, na_filter=False,
+            parse_dates={'pomodoro_datetime': ['year', 'month', 'day', 'time']},
+            keep_date_col=True
         )
-        df_pomodoros['custom_date'] = pd.to_datetime(df_pomodoros[['year','month','day']])
-        df_pomodoros['hours'] = df_pomodoros['duration'].apply(cls.convert_to_hours)
-        df_pomodoros.to_csv(Config.LOGS_LOCAL_PATH, index=False)
+        try:
+            hh, mm = cls.get_settings('day_start').split(':')
+            hh, mm = int(hh), int(mm)
+        except ValueError:
+            hh, mm = 0, 0
+        finally:
+            df_pomodoros['custom_date'] = (
+                df_pomodoros['pomodoro_datetime'] + pd.Timedelta(hours=-hh, minutes=-mm)
+            ).dt.date
+
+            df_pomodoros['hours'] = df_pomodoros['duration'].apply(cls.convert_to_hours)
+            df_pomodoros.to_csv(Config.LOGS_LOCAL_PATH, index=False)
 
         return True
 
