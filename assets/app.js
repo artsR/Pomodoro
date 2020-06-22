@@ -97,7 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
             TargetUI.showMessage(message.text, message.type)
         }
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+        TargetUI.showMessage('Waiting for data...', 'danger')
+        setTimeout(() => document.dispatchEvent(new Event('DOMContentLoaded')), 4000)
+    })
 })
 
 newTarget.addEventListener('click', () => sidepanel.showNewTarget())

@@ -1,14 +1,17 @@
 const {app, BrowserWindow, Tray, Menu, ipcMain, screen} = require('electron')
 const path = require('path')
 const url = require('url')
+const {PythonShell} = require('python-shell')
 
 
 
 let tray
 let mainWindow
+let pyshell
 
 
 app.whenReady().then(() => {
+    runServer()
     createTray()
     createWindow()
 })
@@ -66,13 +69,14 @@ function createWindow() {
     })
     mainWindow.loadURL(
         url.format({
-            pathname: path.join(__dirname, 'main.html'),
+            pathname: path.join(__dirname, '/assets/main.html'),
             protocol: 'file:',
             slashes: true,
         })
     )
     mainWindow.on('closed', () => {
         mainWindow = null
+        pyshell.kill('SIGINT')
     })
 }
 
@@ -107,7 +111,7 @@ function createSettingsWindow() {
     })
     settingsWindow.loadURL(
         url.format({
-            pathname: path.join(__dirname, 'settings.html'),
+            pathname: path.join(__dirname, '/assets/settings.html'),
             protocol: 'file',
             slashes: true,
         })
@@ -117,3 +121,12 @@ function createSettingsWindow() {
     })
     settingsWindow.show()
 }
+
+function runServer() {
+    let FILE_TO_EXEC = 'server'
+    
+    let options = {
+        pythonPath: `./pomodoro/${FILE_TO_EXEC}`
+    }
+    pyshell = PythonShell.run('server', options, (err) => console.log(err))
+    }

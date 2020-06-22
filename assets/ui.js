@@ -275,7 +275,7 @@ class TargetUI {
 
     static showLoading() {
         document.querySelector('#chart').innerHTML = `
-            <img src="./assets/gif/Ripple-1s-200px.gif"/>
+            <img src="./gif/Ripple-1s-200px.gif"/>
         `
     }
 
