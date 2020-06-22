@@ -1,3 +1,6 @@
+# Byte-compiled
+__pycache__/
+
 # Electron
 node_modules
 
@@ -5,3 +8,9 @@ node_modules
 *.env
 *.csv
 *.pickle
+
+# PyInstaller
+build/
+dist/
+*.spec
+server

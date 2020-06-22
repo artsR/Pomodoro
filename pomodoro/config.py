@@ -1,9 +1,14 @@
 import os
+import sys
 from dotenv import load_dotenv
 
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+if getattr(sys, '_MEIPASS', False):
+    basedir, _ = sys.executable.rsplit('/', 1)
+else:
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    
 load_dotenv(os.path.join(basedir, '.env'))
 
 
@@ -14,7 +19,7 @@ class Config:
     LOGS_DROPBOX_PATH = '/Sent files/Pomodoro/logs.csv'
 
     # Local paths:
-    PICKLE_LOCAL_PATH = os.path.join(basedir, 'test.pickle')
+    PICKLE_LOCAL_PATH = os.path.join(basedir, '../test.pickle')
     LOGS_LOCAL_PATH = os.path.join(basedir, '../logs.csv')
     LOGS_MONTH_PATH = os.path.join(basedir, '../logs_this_month.csv')
     SETTING_JSON_PATH = os.path.join(basedir, '../settings.json')

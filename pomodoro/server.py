@@ -8,7 +8,7 @@ from config import Config
 from pomodoro import PomodoroTarget, PomodoroTargetError
 
 
-app = Flask(__name__, template_folder='../', static_folder='../')
+app = Flask(__name__)
 app.config.from_object(Config)
 
 
