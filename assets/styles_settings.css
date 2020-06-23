@@ -1,0 +1,40 @@
+body {
+    background: #777;
+}
+header {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    -webkit-app-region: drag;
+    background: #333;
+    color: #fff;
+}
+.window-action {
+    padding: 5px 15px;
+    -webkit-app-region: no-drag;
+    font-size: 20px;
+    cursor: pointer;
+}
+.window-action:hover {
+    background: red;
+}
+.window-header {
+    padding: 5px 15px;
+    display: inline-flex;
+    align-items: center;
+}
+.main {
+    padding: 25px;
+    display: flex;
+    flex-flow: column wrap;
+    color: #eee;
+}
+.main form {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.main > button {
+    margin-left: -5px;
+}

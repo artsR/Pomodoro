@@ -8,7 +8,7 @@ from config import Config
 from pomodoro import PomodoroTarget, PomodoroTargetError
 
 
-app = Flask(__name__, template_folder='../', static_folder='../')
+app = Flask(__name__)
 app.config.from_object(Config)
 
 
@@ -26,7 +26,7 @@ def error_handler(err):
             'text': err.name,
             'description': err.description,
         })
-        response.data = json.dumps({'message': message})
+        response.data = json.dumps({'message': message, 'targets': []})
         response.content_type = 'application/json'
         return response
 
@@ -113,9 +113,7 @@ def update_data():
 
     return {'message': message}
 
-@app.route('/remote_controls')
-def remote():
-    return render_template('pilot.html')
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5050)

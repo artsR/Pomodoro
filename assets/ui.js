@@ -110,7 +110,7 @@ class SidepanelUI {
     }
 
     show() {
-        document.getElementById('sidepanel').style.width = '300px'
+        document.getElementById('sidepanel').style.width = '301px'
     }
 
     hide() {
@@ -194,6 +194,7 @@ class TargetUI {
 
         tabBtn.type = 'button'
         tabBtn.dataset.title = target.target_title
+        tabBtn.title = target.target_title
         tabCircle.className = 'circle'
         tabCircle.style.background = color
         tabHrs.className = 'badge'
@@ -209,12 +210,26 @@ class TargetUI {
         if (target.progress/target.target_hrs >= 1) {
             tabDays.classList.add('target-done')
         }
+
+        tabBtn.addEventListener('click', () => this.showControls(tabBtn))
     }
 
     addTargetToChart(target, options) {
         /**Add Target's data to chart's `options`. It doesn't render Chart.*/
         options.series.push(Math.round(target.progress / target.target_hrs * 100))
         options.labels.push(target.target_title)
+    }
+
+    showControls(activeBtn) {
+        const panelBtns = document.querySelectorAll('.info-panel .tabs button')
+        const controlsNav = document.querySelector('.info-panel .content')
+
+        panelBtns.forEach(btn => {
+            btn.classList.remove('active')
+        })
+        activeBtn.classList.add('active')
+        controlsNav.style.transform = 'scale(1)'
+        controlsNav.style.opacity = '1'
     }
 
     static getAllTargets(targetsObj) {
@@ -260,7 +275,7 @@ class TargetUI {
 
     static showLoading() {
         document.querySelector('#chart').innerHTML = `
-            <img src="./assets/gif/Ripple-1s-200px.gif"/>
+            <img src="./gif/Ripple-1s-200px.gif"/>
         `
     }
 

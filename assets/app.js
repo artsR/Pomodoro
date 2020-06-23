@@ -1,3 +1,5 @@
+const {ipcRenderer} = require('electron')
+
 const messageDiv = document.querySelector('.info').children[2]
 var chartOptions = {
     series: [],
@@ -13,6 +15,9 @@ var chartOptions = {
             track: {
                 background: '#111',
             },
+            hollow: {
+                size: "35%"
+            },
             dataLabels: {
                 name: {
                     fontSize: '16px',
@@ -23,8 +28,8 @@ var chartOptions = {
                     offsetY: 75,
                     fontSize: '22px',
                     color: '#ccc',
-                    formatter: (val) => `${val}%`,
-                }
+                    formatter: val => `${val}%`,
+                },
             }
         }
     },
@@ -62,6 +67,10 @@ function setDate() {
 }
 setDate()
 
+ipcRenderer.on('show-message', function() {
+    TargetUI.showMessage('Data saved', 'success')
+})
+
 // Main Buttons
 const newTarget = document.getElementById('new-target')
 const allTarget = document.getElementById('all-target')
@@ -87,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
             message = JSON.parse(data.message)
             TargetUI.showMessage(message.text, message.type)
         }
+    })
+    .catch(err => {
+        TargetUI.showMessage('Waiting for data...', 'danger')
+        setTimeout(() => document.dispatchEvent(new Event('DOMContentLoaded')), 4000)
     })
 })
 
@@ -147,6 +160,7 @@ saveNewTarget.addEventListener('click', (e) => {
             TargetUI.showMessage(message.text, message.type)
             TargetUI.displayAllTargets(data.targets, chartOptions)
         })
+        .catch(err => console.log(err))
     }
     sidepanel.hide()
 })
@@ -168,6 +182,22 @@ applyTodosChanges.addEventListener('click', () => {
         message = JSON.parse(data.message)
         TargetUI.showMessage(message.text, 'success')
     })
+    .catch(err => console.log(err))
+})
+
+// ** Controls buttons Events (per day, free days)
+document.querySelector('#freedays-plus').addEventListener('click', () => {
+    const targetToMod = document.querySelector('.info-panel button.active')
+    const targetName = targetToMod.dataset.title
+})
+document.querySelector('#freedays-minus').addEventListener('click', () => {
+
+})
+document.querySelector('#perday-plus').addEventListener('click', () => {
+
+})
+document.querySelector('#perday-minus').addEventListener('click', () => {
+
 })
 
 

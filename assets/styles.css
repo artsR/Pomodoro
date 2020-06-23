@@ -37,7 +37,7 @@ div.info {
     padding: 10px 0px 5px 0px;
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
+    justify-content: space-around;
     align-items: baseline;
     align-content: space-between;
     background: #333;
@@ -52,7 +52,7 @@ div.options {
 div.options .info-panel {
     display: flex;
     flex-direction: row;
-    overflow: visible;
+    overflow: hidden;
 }
 div.options .btns {
     display: flex;
@@ -70,11 +70,15 @@ div.options .tabs button {
     border: 1px solid #777;
     border-radius: 20px;
     height: 30px;
-    overflow: hidden;
+    overflow: visible;
     cursor: pointer;
 }
 div.options .tabs button:hover {
-    border-color: #111;
+    box-shadow: 0px 0px 5px 0px var(--yellow-bg);
+}
+div.options .tabs button.active {
+    box-shadow: 0px 0px 7px 0px var(--yellow-bg);
+    outline: none;
 }
 div.options .tabs .badge {
     margin: 4px;
@@ -100,12 +104,15 @@ div.content {
     grid-template-columns: repeat(3, 25px);
     grid-template-rows: repeat(3, 25px);
     grid-gap: 1px;
-    position: relative;
-    right: 0px;
+    position: fixed;
+    right: 20px;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 1s ease-in-out;
 }
 .content .content-item {
     color: var(--secondary);
-    font-size: 12px;
+    font-size: 16px;
     text-align: center;
     line-height: 25px;
     opacity: .3;
@@ -115,6 +122,10 @@ div.content {
     color: var(--success);
 }
 .content .content-item:hover {
+    opacity: 1;
+}
+.content .content-item:active {
+    color: var(--success-bg);
     opacity: 1;
 }
 .alert {

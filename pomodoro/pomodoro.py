@@ -7,6 +7,7 @@ import dropbox
 import calendar
 import requests
 import pickle
+import json
 from datetime import datetime
 from calendar import monthrange
 from config import Config
@@ -101,12 +102,15 @@ class PomodoroTarget:
         if not _logs_file.endswith('.csv'):
             raise TypeError('Wrong file. Choose CSV file')
         if not os.path.exists(_logs_file):
-            raise PomodoroTargetError({'text': 'Data Not Found. Update file', 'type': 'danger'})
-            # if not self.update_data():
-            #     return False
+            raise PomodoroTargetError({
+                'text': 'Data Not Found. Update file', 'type': 'danger'
+            })
+
         df_pomodoros = pd.read_csv(_logs_file)
+        df_pomodoros['custom_date'] = pd.to_datetime(df_pomodoros['custom_date'])
         df_this_month = df_pomodoros[
-            (df_pomodoros.year == self.__year) & (df_pomodoros.month == self.__month)
+            (df_pomodoros.custom_date.dt.year == self.__year) &
+            (df_pomodoros.custom_date.dt.month == self.__month)
         ]
         df_this_month = df_this_month[
             df_this_month['description'].str.contains(self.__regex)
@@ -115,10 +119,14 @@ class PomodoroTarget:
 
 
     def refresh(self):
+        """Updates Target performance according to progress and days left."""
         _progress = self.progress
         _hrs_left = max(0, self.target_hrs-_progress)
         _days_left = self.__days_in_month - datetime.today().day
-        self.free_days = _days_left - (_hrs_left/self.per_day)
+        self.free_days = (
+            0 if self.per_day is None
+            else _days_left - (_hrs_left/self.per_day)
+        )
         self.per_day = (
             self.per_day if not _hrs_left
             else _hrs_left / (_days_left-self.free_days)
@@ -170,9 +178,17 @@ class PomodoroTarget:
         return secs / 3600
 
 
+    @staticmethod
+    def get_settings(key=None):
+        """Get setting for given `key` from json file. By default returns all."""
+        with open(Config.SETTING_JSON_PATH, 'rb') as f_json:
+            cfg = json.load(f_json)
+        return  cfg if key is None else cfg.get(key, None)
+
+
     @classmethod
     def update_data(cls):
-        """Download Pomodoro's logs from Dropbox and adapt dataset."""
+        """Downloads Pomodoro's logs from Dropbox and adapts dataset."""
         dpx = dropbox.Dropbox(Config.DROPBOX_KEY)
 
         while True:
@@ -182,7 +198,7 @@ class PomodoroTarget:
                 )
             except dropbox.exceptions.ApiError:
                 raise PomodoroTargetError({
-                    'text': 'Problem with API connections. Please wait...',
+                    'text': 'Problem with API connections...',
                     'type': 'danger'
                 })
             except requests.exceptions.ConnectionError:
@@ -197,50 +213,41 @@ class PomodoroTarget:
         # Load data, Adjust header, Add full date and Convert duration format:
         header = ['year','month','day','time','duration','start','end','description']
         df_pomodoros = pd.read_csv(
-            Config.LOGS_LOCAL_PATH, names=header, skiprows=1, na_filter=False
+            Config.LOGS_LOCAL_PATH, names=header, skiprows=1, na_filter=False,
+            parse_dates={'pomodoro_datetime': ['year', 'month', 'day', 'time']},
+            keep_date_col=True
         )
-        df_pomodoros['full_date'] = pd.to_datetime(df_pomodoros[['year','month','day']])
-        df_pomodoros['hours'] = df_pomodoros['duration'].apply(cls.convert_to_hours)
-        df_pomodoros.to_csv(Config.LOGS_LOCAL_PATH, index=False)
+        try:
+            hh, mm = cls.get_settings('day_start').split(':')
+            hh, mm = int(hh), int(mm)
+        except ValueError:
+            hh, mm = 0, 0
+        finally:
+            df_pomodoros['custom_date'] = (
+                df_pomodoros['pomodoro_datetime'] + pd.Timedelta(hours=-hh, minutes=-mm)
+            ).dt.date
+
+            df_pomodoros['hours'] = df_pomodoros['duration'].apply(cls.convert_to_hours)
+            df_pomodoros.to_csv(Config.LOGS_LOCAL_PATH, index=False)
 
         return True
 
 
     @classmethod
     def save(cls, path=Config.PICKLE_LOCAL_PATH):
-        """Save PomodoroTarget when `app.quit()`.
-
-        Seems to be good candidate for refresh component to not download data,
-        just get it from file or save when arguments' values change.
-        """
+        """Saves list of all Targets."""
         with open(path, 'wb') as f:
             pickle.dump(cls.all_targets, f)
 
 
     @classmethod
     def load(cls, path=Config.PICKLE_LOCAL_PATH):
-        """Loads all instances of PomodoroTarget class."""
+        """Loads list of all Targets."""
         if not os.path.exists(path):
             return []
         with open(path, 'rb') as f:
             targets = pickle.load(f)
         return targets
-
-
-
-class Pomodoro:
-    pass
-
-
-
-class User:
-    pass
-
-
-
-def extract_type(description, regex):
-    pattern = re.compile(regex)
-    return ' '.join(pattern.findall(description))
 
 
 

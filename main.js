@@ -1,14 +1,17 @@
-const {app, BrowserWindow, Tray, Menu, screen} = require('electron')
+const {app, BrowserWindow, Tray, Menu, ipcMain, screen} = require('electron')
 const path = require('path')
 const url = require('url')
+const {PythonShell} = require('python-shell')
 
 
 
 let tray
 let mainWindow
+let pyshell
 
 
 app.whenReady().then(() => {
+    runServer()
     createTray()
     createWindow()
 })
@@ -25,6 +28,10 @@ app.on('activate', () => {
 })
 app.allowRendererProcessReuse = false
 
+ipcMain.on('show-message', () => {
+    mainWindow.webContents.send('show-message')
+})
+
 
 function createTray() {
     tray = new Tray(path.join(__dirname, '/assets/icons/png/old-thunderbird-v2-icon.png'))
@@ -37,7 +44,13 @@ function createTray() {
             click() {
                 app.quit()
             }
-        }
+        },
+        {
+            label: 'Settings',
+            click() {
+                createSettingsWindow()
+            }
+        },
     ])
     tray.setContextMenu(contextMenu)
 }
@@ -54,15 +67,16 @@ function createWindow() {
             nodeIntegration: true
         }
     })
-    mainWindow.loadURL(//'http://127.0.0.1:3000/main.html'
+    mainWindow.loadURL(
         url.format({
-        pathname: path.join(__dirname, 'main.html'),
-        protocol: 'file:',
-        slashes: true,
+            pathname: path.join(__dirname, '/assets/main.html'),
+            protocol: 'file:',
+            slashes: true,
         })
     )
     mainWindow.on('closed', () => {
         mainWindow = null
+        pyshell.kill('SIGINT')
     })
 }
 
@@ -82,4 +96,39 @@ function showWindow() {
     mainWindow.show()
     mainWindow.focus()
 }
-// ipcMain.on('show-window', () => showWindow())
+
+function createSettingsWindow() {
+    let settingsWindow = new BrowserWindow({
+        width: 400,
+        height: 200,
+        frame: false,
+        resizable: false,
+        alwaysOnTop: true,
+        parent: mainWindow,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    settingsWindow.loadURL(
+        url.format({
+            pathname: path.join(__dirname, '/assets/settings.html'),
+            protocol: 'file',
+            slashes: true,
+        })
+    )
+    settingsWindow.on('close', () => {
+        settingsWindow = null
+    })
+    settingsWindow.show()
+}
+
+function runServer() {
+    let FILE_TO_EXEC = 'server.py'
+
+    let options = {
+        // pythonPath: `./pomodoro/${FILE_TO_EXEC}`
+        pythonPath: '/home/artur/.local/share/virtualenvs/pomodoro-Wrw1lBnB/bin/python3.8',
+        scriptPath: './pomodoro/',
+    }
+    pyshell = PythonShell.run(`${FILE_TO_EXEC}`, options, (err) => console.log(err))
+}
