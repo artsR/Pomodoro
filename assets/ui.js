@@ -39,7 +39,8 @@ class SidepanelUI {
         }
         else {
             return new Target(titleInput.value, this.targethrsInput.value,
-                            this.freedaysInput.value, null, todos, null)
+                            this.freedaysInput.value, this.perdayInput.value,
+                            todos, null)
         }
     }
 
