@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField
 from wtforms.validators import InputRequired, NumberRange
@@ -60,7 +60,7 @@ def new_target():
 
     json_data = {
         k: v for k,v in request_data.items()
-        if k not in ['progress', 'per_day']
+        if k not in ['progress']
     }
     all_targets = PomodoroTarget.load()
     PomodoroTarget.all_targets = all_targets
@@ -78,7 +78,12 @@ def refresh():
     all_targets = [target.refresh() for target in all_targets]
     PomodoroTarget.all_targets = all_targets
     PomodoroTarget.save()
-    message = json.dumps({'text': 'Data has been refreshed', 'type': 'success'})
+
+    if session.get('message', None) is not None:
+        message = session.pop('message')
+    else:
+        message = json.dumps({'text': 'Data has been refreshed', 'type': 'success'})
+
     return redirect(url_for('dashboard', message=message))
 
 
@@ -103,6 +108,31 @@ def edit_targets():
     message = json.dumps({'text': 'Modification has been saved', 'type': 'success'})
 
     return redirect(url_for('dashboard', message=message))
+
+
+@app.route('/edit_daily', methods=['POST'])
+def edit_daily():
+    received_target = request.get_json(silent=True)
+    if received_target is None:
+        message = json.dumps({'text': 'Provided invalid data', 'type': 'danger'})
+        return redirect(url_for('dashboard', message=message))
+
+    all_targets = PomodoroTarget.load()
+    modified_target = [
+        target for target in all_targets if target.title == received_target['title']
+    ]
+
+    target = modified_target[0]
+    target.per_day_init = received_target['per_day']
+    target.free_days = received_target['free_days']
+
+    PomodoroTarget.all_targets = all_targets
+    PomodoroTarget.save()
+
+    session['message'] = json.dumps({'text': 'Daily data has been saved',
+                                    'type': 'success'})
+
+    return redirect(url_for('refresh'))
 
 
 @app.route('/update_data', methods=['POST'])

@@ -8,7 +8,7 @@ if getattr(sys, '_MEIPASS', False):
     basedir, _ = sys.executable.rsplit('/', 1)
 else:
     basedir = os.path.abspath(os.path.dirname(__file__))
-    
+
 load_dotenv(os.path.join(basedir, '.env'))
 
 
@@ -31,3 +31,7 @@ class Config:
 
     # Server
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'blablabla'
+
+    # # Cookie
+    # SESSION_COOKIE_DOMAIN = 'localhost'
+    # SESSION_COOKIE_SAMESITE = 'Lax'
