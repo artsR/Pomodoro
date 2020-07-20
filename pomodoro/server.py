@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField
 from wtforms.validators import InputRequired, NumberRange
@@ -78,7 +78,10 @@ def refresh():
     all_targets = [target.refresh() for target in all_targets]
     PomodoroTarget.all_targets = all_targets
     PomodoroTarget.save()
-    message = json.dumps({'text': 'Data has been refreshed', 'type': 'success'})
+    if session.get('message', None) is not None:
+        message = session.pop('message')
+    else:
+        message = json.dumps({'text': 'Data has been refreshed', 'type': 'success'})
     return redirect(url_for('dashboard', message=message))
 
 
@@ -103,6 +106,15 @@ def edit_targets():
     message = json.dumps({'text': 'Modification has been saved', 'type': 'success'})
 
     return redirect(url_for('dashboard', message=message))
+
+
+@app.route('/edit_daily', methods=['POST'])
+def edit_daily():
+
+    session['message'] = json.dumps({'text': 'Daily data has been changed',
+                                    'type': 'success'})
+
+    return redirect(url_for('refresh'))
 
 
 @app.route('/update_data', methods=['POST'])

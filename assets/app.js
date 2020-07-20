@@ -78,6 +78,7 @@ const refresh = document.getElementById('refresh')
 const updateDropbox = document.getElementById('update')
 const closeSidepanel = document.getElementById('close-sidepanel')
 const applyTodosChanges = document.getElementById('apply-changes')
+const applyDailyChanges = document.getElementById('apply-daily-data')
 const saveNewTarget = document.getElementById('save-target')
 
 const sidepanel = new SidepanelUI()
@@ -185,56 +186,56 @@ applyTodosChanges.addEventListener('click', () => {
     .catch(err => console.log(err))
 })
 
+applyDailyChanges.addEventListener('click', () => {
+    const targetObj = TargetUI.applyDailyMods();console.log(targetObj, 'in event!')
+    // fetch(`http://127.0.0.1:5050/edit_daily`, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(targetObj)
+    // })
+})
+
 // ** Controls buttons Events (per day, free days)
 document.querySelector('#freedays-plus').addEventListener('click', () => {
     const targetToMod = document.querySelector('.info-panel button.active')
     const targetName = targetToMod.dataset.title
+
+    const targetValue = targetToMod.querySelector('span:nth-child(3)')
+
+    if (targetValue.innerText < 25) {
+        targetValue.innerText = Number(targetValue.innerText) + 1
+    }
 })
 document.querySelector('#freedays-minus').addEventListener('click', () => {
+    const targetToMod = document.querySelector('.info-panel button.active')
+    const targetName = targetToMod.dataset.title
 
+    const targetValue = targetToMod.querySelector('span:nth-child(3)')
+
+    if (targetValue.innerText > 0) {
+        targetValue.innerText = Number(targetValue.innerText) - 1
+    }
 })
 document.querySelector('#perday-plus').addEventListener('click', () => {
+    const targetToMod = document.querySelector('.info-panel button.active')
+    const targetName = targetToMod.dataset.title
 
+    const targetValue = targetToMod.querySelector('span:nth-child(2)')
+
+    if (targetValue.innerText < 20) {
+        targetValue.innerText = Number(targetValue.innerText) + 1
+    }
 })
 document.querySelector('#perday-minus').addEventListener('click', () => {
+    const targetToMod = document.querySelector('.info-panel button.active')
+    const targetName = targetToMod.dataset.title
 
+    const targetValue = targetToMod.querySelector('span:nth-child(2)')
+
+    if (targetValue.innerText > 0) {
+        targetValue.innerText = Number(targetValue.innerText) - 1
+    }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function createWindow() {
-//     var python = require('child_process').spawn('python', ['pomodoro.py'])
-//     python.stdout.on('data', function(data){
-//         console.log(`data: ${data.toString('utf8')}`)
-//     })
-//     var pyshell = require('python-shell')
-//     pyshell.run('file_name.py', function(err, results){
-//         if (err){
-//             console.log(err)
-//         }
-//     })
-// }
