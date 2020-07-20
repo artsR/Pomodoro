@@ -188,14 +188,19 @@ applyTodosChanges.addEventListener('click', () => {
 
 applyDailyChanges.addEventListener('click', () => {
     const targetObj = TargetUI.applyDailyMods();console.log(targetObj, 'in event!')
-    // fetch(`http://127.0.0.1:5050/edit_daily`, {
-    //     method: 'POST',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(targetObj)
-    // })
+    fetch(`http://127.0.0.1:5050/edit_daily`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(targetObj)
+    })
+    .then(response => response.json())
+    .then(data => {
+        message = JSON.parse(data.message)
+        TargetUI.showMessage(message.text, message.type)
+    })
 })
 
 // ** Controls buttons Events (per day, free days)
@@ -204,9 +209,16 @@ document.querySelector('#freedays-plus').addEventListener('click', () => {
     const targetName = targetToMod.dataset.title
 
     const targetValue = targetToMod.querySelector('span:nth-child(3)')
+    const counterpart = targetToMod.querySelector('span:nth-child(2)')
 
     if (targetValue.innerText < 25) {
         targetValue.innerText = Number(targetValue.innerText) + 1
+        let hrs_left = targetToMod.dataset.target - targetToMod.dataset.progress,
+            days_left = daysInMonth - new Date().getDate()
+
+        counterpart.innerText = Math.round(
+            hrs_left / (days_left - targetValue.innerText)
+        )
     }
 })
 document.querySelector('#freedays-minus').addEventListener('click', () => {
@@ -214,9 +226,16 @@ document.querySelector('#freedays-minus').addEventListener('click', () => {
     const targetName = targetToMod.dataset.title
 
     const targetValue = targetToMod.querySelector('span:nth-child(3)')
+    const counterpart = targetToMod.querySelector('span:nth-child(2)')
 
     if (targetValue.innerText > 0) {
         targetValue.innerText = Number(targetValue.innerText) - 1
+        let hrs_left = targetToMod.dataset.target - targetToMod.dataset.progress,
+            days_left = daysInMonth - new Date().getDate()
+
+        counterpart.innerText = Math.round(
+            hrs_left / (days_left - targetValue.innerText)
+        )
     }
 })
 document.querySelector('#perday-plus').addEventListener('click', () => {
@@ -224,9 +243,16 @@ document.querySelector('#perday-plus').addEventListener('click', () => {
     const targetName = targetToMod.dataset.title
 
     const targetValue = targetToMod.querySelector('span:nth-child(2)')
+    const counterpart = targetToMod.querySelector('span:nth-child(3)')
 
     if (targetValue.innerText < 20) {
         targetValue.innerText = Number(targetValue.innerText) + 1
+        let hrs_left = targetToMod.dataset.target - targetToMod.dataset.progress,
+            days_left = daysInMonth - new Date().getDate()
+
+        counterpart.innerText = Math.round(
+            days_left - (hrs_left/targetValue.innerText)
+        )
     }
 })
 document.querySelector('#perday-minus').addEventListener('click', () => {
@@ -234,8 +260,15 @@ document.querySelector('#perday-minus').addEventListener('click', () => {
     const targetName = targetToMod.dataset.title
 
     const targetValue = targetToMod.querySelector('span:nth-child(2)')
+    const counterpart = targetToMod.querySelector('span:nth-child(3)')
 
     if (targetValue.innerText > 0) {
         targetValue.innerText = Number(targetValue.innerText) - 1
+        let hrs_left = targetToMod.dataset.target - targetToMod.dataset.progress,
+            days_left = daysInMonth - new Date().getDate()
+
+        counterpart.innerText = Math.round(
+            days_left - (hrs_left/targetValue.innerText)
+        )
     }
 })

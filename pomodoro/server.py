@@ -110,8 +110,23 @@ def edit_targets():
 
 @app.route('/edit_daily', methods=['POST'])
 def edit_daily():
+    received_target = request.get_json(silent=True)
+    if received_target is None:
+        message = json.dumps({'text': 'Provided invalid data', 'type': 'danger'})
+        return redirect(url_for('dashboard', message=message))
 
-    session['message'] = json.dumps({'text': 'Daily data has been changed',
+    all_targets = PomodoroTarget.load()
+    modified_target = [
+        target for target in all_targets if target.title == received_target.title
+    ]
+
+    target = modified_target[0]
+    target.per_day_init = received_target.per_day
+    target.free_days = received_target.free_days
+
+    PomodoroTarget.save()
+
+    session['message'] = json.dumps({'text': 'Daily data has been saved',
                                     'type': 'success'})
 
     return redirect(url_for('refresh'))

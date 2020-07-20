@@ -197,6 +197,8 @@ class TargetUI {
 
         tabBtn.type = 'button'
         tabBtn.dataset.title = target.target_title
+        tabBtn.dataset.progress = target.progress
+        tabBtn.dataset.target = target.target_hrs
         tabBtn.title = target.target_title
         tabCircle.className = 'circle'
         tabCircle.style.background = color
@@ -247,7 +249,9 @@ class TargetUI {
 
         // Hide controlls:
         document.querySelector('.info-panel .content').style.opacity = '0'
-        document.querySelector('.info-panel .content').style.transform = 'scale(0)'
+        setTimeout(() => {
+            document.querySelector('.info-panel .content').style.transform = 'scale(0)'
+        }, 1000)
 
         return {
             title,
