@@ -126,10 +126,10 @@ function runServer() {
     // let FILE_TO_EXEC = 'server.py'
     //
     // let options = {
-    //     // pythonPath: `./pomodoro/${FILE_TO_EXEC}`
+    //     // pythonPath: `./pomodoro/${FILE_TO_EXEC}`,
     //     pythonPath: '/home/artur/.local/share/virtualenvs/pomodoro-Wrw1lBnB/bin/python3.8',
     //     scriptPath: './pomodoro/',
     // }
     // pyshell = PythonShell.run(`${FILE_TO_EXEC}`, options, (err) => console.log(err))
-    pyshell = require('child_process').execFile(path.join(__dirname, 'pomodoro', 'pomodoro-eagle'))
+    pyshell = require('child_process').execFile(path.join(__dirname, 'pomodoro', 'server_2'))
 }

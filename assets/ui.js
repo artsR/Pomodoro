@@ -60,8 +60,8 @@ class SidepanelUI {
         }
     }
 
-    // Add new `activity` to `new Target`:
     addActivity(e) {
+        /**Adds new `activity to 'new Target'*/
         const parent = e.target.closest('div'),
             activityType = parent.children[0],
             activityName = parent.children[1]
@@ -74,6 +74,7 @@ class SidepanelUI {
     }
 
     applyTodosMods() {
+        /**Collects `todos` for each pomodoro `target` listed in `Targets`.*/
         const targetTables = this.allTargetInfo.querySelectorAll('table')
         const targetObjs = {}
         targetTables.forEach(targetTable => {
@@ -99,12 +100,14 @@ class SidepanelUI {
     }
 
     showNewTarget() {
+        /**Shows `New Target` sidepanel.*/
         this.allTargetInfo.style.display = 'none'
         this.newTargetInfo.style.display = 'block'
         this.show()
     }
 
     showAllTarget() {
+        /**Shows `Targets` sidepanel.*/
         this.newTargetInfo.style.display = 'none'
         this.allTargetInfo.style.display = 'block'
         this.show()
@@ -181,7 +184,7 @@ class TargetUI {
     }
 
     addTargetToInfoPanel(target, color) {
-        /**Render free_days and per_day information for Target in `.info-panel`.*/
+        /**Renders free_days and per_day information for Target in `.info-panel`.*/
         const tabsContainer = document.querySelector('#target-tabs')
         const tabBtn = document.createElement('button'),
             tabCircle = document.createElement('span'),
@@ -195,6 +198,8 @@ class TargetUI {
 
         tabBtn.type = 'button'
         tabBtn.dataset.title = target.target_title
+        tabBtn.dataset.progress = target.progress
+        tabBtn.dataset.target = target.target_hrs
         tabBtn.title = target.target_title
         tabCircle.className = 'circle'
         tabCircle.style.background = color
@@ -216,12 +221,13 @@ class TargetUI {
     }
 
     addTargetToChart(target, options) {
-        /**Add Target's data to chart's `options`. It doesn't render Chart.*/
+        /**Adds Target's data to chart's `options`. It doesn't render Chart.*/
         options.series.push(Math.round(target.progress / target.target_hrs * 100))
         options.labels.push(target.target_title)
     }
 
     showControls(activeBtn) {
+        /**Shows controller to change `per_day` and `free_days`.*/
         const panelBtns = document.querySelectorAll('.info-panel .tabs button')
         const controlsNav = document.querySelector('.info-panel .content')
 
@@ -231,6 +237,28 @@ class TargetUI {
         activeBtn.classList.add('active')
         controlsNav.style.transform = 'scale(1)'
         controlsNav.style.opacity = '1'
+    }
+
+    static applyDailyMods() {
+        /**Set changed value of `per_day`/`free_days` made with controller.*/
+        const targetActive = document.querySelector('.info-panel button.active')
+        const title = targetActive.dataset.title
+        const per_day = parseInt(targetActive.querySelector('span:nth-child(2)').innerText)
+        const free_days = parseInt(targetActive.querySelector('span:nth-child(3)').innerText)
+
+        targetActive.classList.remove('active')
+
+        // Hide controlls:
+        document.querySelector('.info-panel .content').style.opacity = '0'
+        setTimeout(() => {
+            document.querySelector('.info-panel .content').style.transform = 'scale(0)'
+        }, 1000)
+
+        return {
+            title,
+            per_day,
+            free_days
+        }
     }
 
     static getAllTargets(targetsObj) {
