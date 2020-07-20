@@ -53,7 +53,7 @@ class PomodoroTarget:
         self.todos = todos
         self.target_hrs = float(target_hrs)
         self.free_days = float(free_days)
-        self.per_day_init = per_day
+        self.per_day_init = min(per_day, 20)
         self.per_day = self.target_hrs / (self.__days_in_month-self.free_days)
 
         self.__regex = self.extract_todos(todos)
