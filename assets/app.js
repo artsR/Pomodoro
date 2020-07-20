@@ -187,7 +187,7 @@ applyTodosChanges.addEventListener('click', () => {
 })
 
 applyDailyChanges.addEventListener('click', () => {
-    const targetObj = TargetUI.applyDailyMods();console.log(targetObj, 'in event!')
+    const targetObj = TargetUI.applyDailyMods()
     fetch(`http://127.0.0.1:5050/edit_daily`, {
         method: 'POST',
         headers: {
