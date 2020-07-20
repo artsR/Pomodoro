@@ -60,7 +60,7 @@ def new_target():
 
     json_data = {
         k: v for k,v in request_data.items()
-        if k not in ['progress', 'per_day']
+        if k not in ['progress']
     }
     all_targets = PomodoroTarget.load()
     PomodoroTarget.all_targets = all_targets
@@ -79,6 +79,7 @@ def refresh():
     PomodoroTarget.all_targets = all_targets
     PomodoroTarget.save()
     message = json.dumps({'text': 'Data has been refreshed', 'type': 'success'})
+    
     return redirect(url_for('dashboard', message=message))
 
 

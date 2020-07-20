@@ -28,7 +28,7 @@ class PomodoroTarget:
     """
     all_targets = []
 
-    def __init__(self, target_title, target_hrs, todos, free_days=8):
+    def __init__(self, target_title, target_hrs, todos, free_days=8, per_day=8):
         """Contains info about target's specification.
 
         Target can contain both '+'(projects), '@'(contexts) and tasks.
@@ -53,6 +53,7 @@ class PomodoroTarget:
         self.todos = todos
         self.target_hrs = float(target_hrs)
         self.free_days = float(free_days)
+        self.per_day_init = per_day
         self.per_day = self.target_hrs / (self.__days_in_month-self.free_days)
 
         self.__regex = self.extract_todos(todos)
@@ -125,10 +126,10 @@ class PomodoroTarget:
         _days_left = self.__days_in_month - datetime.today().day
         self.free_days = (
             0 if self.per_day is None
-            else _days_left - (_hrs_left/self.per_day)
+            else _days_left - (_hrs_left/self.per_day_init)
         )
         self.per_day = (
-            self.per_day if not _hrs_left
+            self.per_day_init if not _hrs_left
             else _hrs_left / (_days_left-self.free_days)
         )
         return self
@@ -139,6 +140,7 @@ class PomodoroTarget:
             'title': self.title,
             'targethrs': self.target_hrs,
             'freedays': self.free_days,
+            'perday_init': self.per_day_init,
             'perday': self.per_day,
             'todos': self.todos,
             'progress': self.progress if _progress is None else _progress,
