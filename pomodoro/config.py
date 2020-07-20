@@ -32,6 +32,6 @@ class Config:
     # Server
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'blablabla'
 
-    # Cookie
-    SESSION_COOKIE_DOMAIN = 'localhost'
-    SESSION_COOKIE_SAMESITE = 'Lax'
+    # # Cookie
+    # SESSION_COOKIE_DOMAIN = 'localhost'
+    # SESSION_COOKIE_SAMESITE = 'Lax'

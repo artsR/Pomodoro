@@ -119,13 +119,14 @@ def edit_daily():
 
     all_targets = PomodoroTarget.load()
     modified_target = [
-        target for target in all_targets if target.title == received_target.title
+        target for target in all_targets if target.title == received_target['title']
     ]
 
     target = modified_target[0]
-    target.per_day_init = received_target.per_day
-    target.free_days = received_target.free_days
+    target.per_day_init = received_target['per_day']
+    target.free_days = received_target['free_days']
 
+    PomodoroTarget.all_targets = all_targets
     PomodoroTarget.save()
 
     session['message'] = json.dumps({'text': 'Daily data has been saved',

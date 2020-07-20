@@ -198,9 +198,15 @@ applyDailyChanges.addEventListener('click', () => {
     })
     .then(response => response.json())
     .then(data => {
-        message = JSON.parse(data.message)
-        TargetUI.showMessage(message.text, message.type)
+        TargetUI.showLoading()
+        TargetUI.resetTargets()
+        TargetUI.displayAllTargets(data.targets, chartOptions)
+        if (data.message) {
+            message = JSON.parse(data.message)
+            TargetUI.showMessage(message.text, message.type)
+        }
     })
+    .catch(err => console.log(err))
 })
 
 // ** Controls buttons Events (per day, free days)
