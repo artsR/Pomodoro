@@ -1,9 +1,39 @@
-# Pomodoro Eagle
+# Pomodoro
 
-Application helps to follow targets of made pomodoros.
+## General Info
 
-## Planning
-  * shows accomplishment of declared time spent on project/context/task
-    - [x] download `logs.csv` from [Dropbox](https://dropbox.com)
-    - [x] shows % of target
-    - [x] shows required avg. hours per day to meet target
+Technology used:
+* Python, Flask - backend  (frozen under GNU/Linux w/ PyInstaller)
+* Electron (HTML, CSS, JS) - frontend
+
+Running application add its icon at system notification area (Tray).
+
+
+
+## App Overview
+
+Application is desktop extension to time management apps that track and collect time spent
+on given tasks/projects. It is based on csv file of given structure produced by mentioned apps.   
+
+With this application you can:
+* download prepared csv file from Dropbox
+* specify monthly target [hours] to spent on given activity
+    * add new target
+    * edit existing one
+* track progress of time spending on given task in relation to target
+* track how many free days you have left
+* track how many hours per day you need to spent on task to meet target
+* customize day start hour
+
+
+![Overview](./docs/overview.gif)
+
+Buttons:
+* Update: download csv file from Dropbox
+* Refresh: 're-calculate' csv file to determine progress
+
+Pilot:  
+![Daily](./docs/daily.png)
+* hours per day to reach tearget: 5
+* free days left: 1
+It can be modified with 'pilot' (appropriate arrows)
