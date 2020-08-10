@@ -3,12 +3,12 @@
 ## General Info
 
 Technology used:
-* Python, Flask - backend  (frozen under GNU/Linux w/ PyInstaller)
+* Python, Flask - backend
 * Electron (HTML, CSS, JS) - frontend
 
 Running application add its icon at system notification area (Tray).
 
-
+At this stage of developing app all targets are serialized with `pickle` module and stored in file.
 
 ## App Overview
 
