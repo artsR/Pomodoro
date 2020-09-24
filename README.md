@@ -22,7 +22,6 @@ pipenv install
 export DROPBOX_KEY=your_dropbox_key
 npm start
 ```
-After run application create new target with project: Programming
 
 ## App Overview
 
