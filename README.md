@@ -10,6 +10,19 @@ Running application add its icon at system notification area (Tray).
 
 At this stage of developing app all targets are serialized with `pickle` module and stored in file.
 
+## Usage
+
+```
+git clone https://github.com/artsR/Pomodoro.git
+cd Pomodoro
+npm install
+cd pomodoro
+pipenv shell
+pipenv install
+export DROPBOX_KEY=your_dropbox_key
+```
+After run application create new target with project: Programming
+
 ## App Overview
 
 Application is desktop extension to time management apps that track and collect time spent
