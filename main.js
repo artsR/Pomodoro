@@ -128,7 +128,7 @@ function runServer() {
     let options = {
         scriptPath: path.join(__dirname, './pomodoro/'),
     }
-    pyshell = PythonShell.run(`${FILE_TO_EXEC}`, options, (err) => console.log(err))
+    pyshell = PythonShell.run(`${FILE_TO_EXEC}`, options, err => console.log(err))
     
     // pyshell = require('child_process').execFile(path.join(__dirname, 'pomodoro', 'server'))
 }
